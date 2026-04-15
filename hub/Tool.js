@@ -11,6 +11,21 @@ import {
 } from '../lib/engine.js';
 
 // ---------------------------------------------------------------------------
+// SheetJS loader — injects the UMD bundle via <script> tag so we avoid the
+// MIME-type / CORS issues that hit dynamic import() of .mjs from CDNs.
+// ---------------------------------------------------------------------------
+function loadXLSX() {
+  if (window.XLSX) return Promise.resolve(window.XLSX);
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js';
+    s.onload  = () => resolve(window.XLSX);
+    s.onerror = () => reject(new Error('Failed to load SheetJS from CDN. Check your internet connection.'));
+    document.head.appendChild(s);
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Scoped CSS  (prefix: pit-)
 // All colours reference NETC Labs CSS variables so the widget adapts to
 // light/dark theme automatically.
@@ -378,9 +393,9 @@ export function Tool() {
     btn.innerHTML = '<span class="pit-spinner"></span>Processing…';
 
     try {
-      // Lazy-load SheetJS (cached after first call)
+      // Lazy-load SheetJS via script tag (cached after first call)
       if (!xlsxModule) {
-        xlsxModule = await import('https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.mjs');
+        xlsxModule = await loadXLSX();
       }
       const XLSX = xlsxModule;
 

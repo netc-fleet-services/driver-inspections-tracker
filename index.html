@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pre-Trip Compliance Audit — NETC Labs</title>
+
+  <!-- Prevent flash of wrong theme -->
+  <script>
+    (function () {
+      const saved = localStorage.getItem('pit-theme') || 'theme-dark';
+      document.documentElement.className = saved;
+    })();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────────────────────────── -->
+  <header class="site-header">
+    <a class="site-header-left" href="https://netc-fleet-services.github.io/netc-labs/" target="_blank" rel="noopener">
+      <span class="site-header-logo">NETC Labs</span>
+      <span class="site-header-sep">/</span>
+      <span class="site-header-name">Pre-Trip Compliance Audit</span>
+    </a>
+    <button class="theme-toggle" id="theme-btn" aria-label="Toggle theme">
+      <span id="theme-icon">☀</span>
+    </button>
+  </header>
+
+  <!-- ── Main ────────────────────────────────────────────────────────────── -->
+  <main class="site-main">
+
+    <div class="site-hero">
+      <div class="site-hero-tag">NETC Labs · Compliance Tools</div>
+      <h1>Pre-Trip Compliance Audit</h1>
+      <p>
+        Upload your Towbook Driver Activity and PreTrip Inspections exports
+        to instantly calculate each driver's required, completed, and missed
+        inspections — with search, sort, and Excel export.
+      </p>
+    </div>
+
+    <!-- The Tool() widget mounts here -->
+    <div class="tool-card" id="tool-mount">
+      <div style="padding:2rem;text-align:center;color:var(--on-surface-muted);font-size:0.85rem">
+        Loading…
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <p>
+      Part of
+      <a href="https://netc-fleet-services.github.io/netc-labs/" target="_blank" rel="noopener">NETC Labs</a>
+      — purpose-built tools for towing &amp; fleet operations. &nbsp;·&nbsp;
+      <a href="https://github.com/netc-fleet-services/driver-inspections-tracker" target="_blank" rel="noopener">View source on GitHub</a>
+    </p>
+  </footer>
+
+  <!-- ── Theme toggle ─────────────────────────────────────────────────────── -->
+  <script>
+    const btn  = document.getElementById('theme-btn');
+    const icon = document.getElementById('theme-icon');
+
+    function applyTheme(theme) {
+      document.documentElement.className = theme;
+      icon.textContent = theme === 'theme-dark' ? '☀' : '☾';
+      localStorage.setItem('pit-theme', theme);
+    }
+
+    // Set correct icon on load
+    applyTheme(document.documentElement.className || 'theme-dark');
+
+    btn.addEventListener('click', () => {
+      const next = document.documentElement.className === 'theme-dark'
+        ? 'theme-light'
+        : 'theme-dark';
+      applyTheme(next);
+    });
+  </script>
+
+  <!-- ── Mount the Tool widget ────────────────────────────────────────────── -->
+  <script type="module">
+    import { Tool } from './hub/Tool.js';
+
+    const mount = document.getElementById('tool-mount');
+    mount.innerHTML = '';
+    mount.appendChild(Tool());
+  </script>
+
+</body>
+</html>
